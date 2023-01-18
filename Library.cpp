@@ -81,6 +81,29 @@ struct {
 	string Role; // Admin / User
 } LogedInUser;
 
+
+bool isNumber(string a) {
+
+	for(int i = 0; i<a.length(); i++) {
+
+		int b = (int)a[i];
+		if( b < 48 || b > 57 ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool isValidPhone(string phone) {
+
+	if(phone.length() != 11) {
+		return false;
+	}
+
+	return isNumber(phone);
+}
+
 void RenderEachAdmin(int adminIndex,string data) {
 
 	string arr[3],temp = "";
@@ -329,17 +352,15 @@ bool LoginUser(){
 	return false;
 }
 
-void _SignUpUser(string id,string pass) {
-
-//	clearAdmin();
+void _SignUpUser(string id,string pass,string name,string adress,string phone,string birthday) {
 
 	string data = "";
 
 	for(int i = 0; i<UserCount; i++) {
-		data += Users[i].Id + "|" + Users[i].Password + "|" + Users[i].Name + "|" + Users[i].Address + "|" + Users[i].Phone + "|" + Users[i].Birthday + "|" + Users[i].Name + "|" + Users[i].StartMembership + "|" + Users[i].EndMembership + "|" + to_string(Users[i].DelayDays) + "|" + to_string(Users[i].AccessId) + "|" + to_string(Users[i].BorrowedBooks) + "|" + to_string(Users[i].IsActive) + "~";
+		data += Users[i].Id + "|" + Users[i].Password + "|" + Users[i].Name + "|" + Users[i].Address + "|" + Users[i].Phone + "|" + Users[i].Birthday + "|" + Users[i].StartMembership + "|" + Users[i].EndMembership + "|" + to_string(Users[i].DelayDays) + "|" + to_string(Users[i].AccessId) + "|" + to_string(Users[i].BorrowedBooks) + "|" + to_string(Users[i].IsActive) + "~";
 	}
 
-//	data += id + "|" + pass + "|0";
+	data += id + "|" + pass + "|" + name + "|" + adress + "|" + phone + "|" + birthday + "|-|-|0|0|0|0";
 	
 	ofstream file("user.txt");
 	file<<data;
@@ -365,8 +386,14 @@ void SignUpUser() {
 		cin>>adress;
 		cout<<"Enter Your Phone : ";
 		cin>>phone;
-		cout<<"Enter Your Birthday : ";
+		cout<<"Enter Your Birthday (yyyy/mm/dd): ";
 		cin>>birthday;
+		
+		if(!isValidPhone(phone)){
+			cout<<"Your Phone Number is not valid !!!";
+			sleep(1);
+			continue;
+		}
 
 		for(int i = 0; i<UserCount; i++) {
 
@@ -383,7 +410,7 @@ void SignUpUser() {
 
 	} while(!check);
 
-	_SignUpUser(Id,pass);
+	_SignUpUser(Id,pass,name,adress,phone,birthday);
 	cout<<"***************Sign Up Success*********************"<<endl;
 	RenderUser();
 	sleep(1);
@@ -551,28 +578,6 @@ void UserMenu() {
 //
 //    return year + "/" + month + "/" + day;
 //}
-
-bool isNumber(string a) {
-
-	for(int i = 0; i<a.length(); i++) {
-
-		int b = (int)a[i];
-		if( b < 48 || b > 57 ) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool isValidPhone(string phone) {
-
-	if(phone.length() != 11) {
-		return false;
-	}
-
-	return isNumber(phone);
-}
 
 
 
